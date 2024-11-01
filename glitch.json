@@ -1,0 +1,4 @@
+{
+  "start": "python api/search.py",
+  "install": "pip install -r requirements.txt"
+}

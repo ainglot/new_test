@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Wyszukiwarka Bibliografii</title>
+  </head>
+  <body>
+    <h2>Wyszukaj publikacje według roku</h2>
+    <label for="year">Rok publikacji:</label>
+    <input type="text" id="year" name="year" />
+    <button onclick="searchByYear()">Szukaj</button>
+
+    <h3>Wyniki:</h3>
+    <ul id="results"></ul>
+
+    <script>
+      async function searchByYear() {
+        const year = document.getElementById("year").value;
+        const response = await fetch(
+          "https://complete-mica-dash.glitch.me/api/search",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ year: year }),
+          }
+        );
+        const data = await response.json();
+
+        // Wyświetlanie wyników
+        const results = document.getElementById("results");
+        results.innerHTML = ""; // Wyczyść wyniki
+        data.forEach((entry, index) => {
+          // Główny element li dla rekordu
+          const mainLi = document.createElement("li");
+          mainLi.innerText = `Rekord ${index + 1}`;
+
+          // Zagnieżdżona lista ul dla szczegółów rekordu
+          const detailsUl = document.createElement("ul");
+
+          // Podpunkt dla ID
+          const idLi = document.createElement("li");
+          idLi.innerText = `ID: ${entry.ID}`;
+          detailsUl.appendChild(idLi);
+
+          // Podpunkt dla Autorzy
+          const authorLi = document.createElement("li");
+          authorLi.innerText = `Autorzy: ${entry.author}`;
+          detailsUl.appendChild(authorLi);
+
+          // Podpunkt dla Tytuł
+          const titleLi = document.createElement("li");
+          titleLi.innerText = `Tytuł: ${entry.title}`;
+          detailsUl.appendChild(titleLi);
+
+          // Podpunkt dla ROK
+          const yearLi = document.createElement("li");
+          yearLi.innerText = `ROK: ${entry.year}`;
+          detailsUl.appendChild(yearLi);
+
+          // Podpunkt dla ABSTRAKT
+          const abstractLi = document.createElement("li");
+          abstractLi.innerText = `Abstrakt: ${entry.abstract}`;
+          detailsUl.appendChild(abstractLi);
+
+          // Dodanie zagnieżdżonej listy ul do głównego elementu li
+          mainLi.appendChild(detailsUl);
+
+          // Dodanie głównego elementu li do wyników
+          results.appendChild(mainLi);
+        });
+      }
+    </script>
+  </body>
+</html>
